@@ -1,2 +1,4 @@
 # gowk
-WuKongIM REST API golang sdk
+
+
+gowk 是 WuKongIM REST API 的 Go 语言 SDK。
