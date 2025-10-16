@@ -68,7 +68,9 @@ type MessageSyncRequest struct {
 	PullMode        *PullMode   `json:"pull_mode,omitempty"`         // 可选，拉取模式 (0=向下拉取, 1=向上拉取)
 }
 
-type MessageSyncResponseItem struct {
+type RecentItem struct {
+	Header      Header      `json:"header"`        // 消息头
+	Setting     uint8       `json:"setting"`       // // 消息设置 消息设置是一个 uint8的数字类型 为1个字节，完全由第三方自定义 比如定义第8位为已读未读回执标记，开启则为0000 0001 = 1
 	MessageID   int64       `json:"message_id"`    // 消息 ID
 	MessageSeq  int64       `json:"message_seq"`   // 消息序列号
 	ClientMsgNo string      `json:"client_msg_no"` // 客户端消息编号（回显）
@@ -79,9 +81,16 @@ type MessageSyncResponseItem struct {
 	Payload     string      `json:"payload"`       // Base64 编码的消息内容
 }
 
+type MessageSyncResponse struct {
+	StartMessageSeq uint32       `json:"start_message_seq"` // 查询的start_message_seq
+	EndMessageSeq   uint32       `json:"end_message_seq"`   // 查询的end_message_seq
+	More            int          `json:"more"`              // 是否有更多  0.无 1.有
+	Messages        []RecentItem `json:"messages"`          // 最近N条消息
+}
+
 // 同步频道历史消息
-func (g *GoWk) MessageSync(req MessageSyncRequest) ([]MessageSyncResponseItem, error) {
-	var result []MessageSyncResponseItem
+func (g *GoWk) MessageSync(req MessageSyncRequest) (*MessageSyncResponse, error) {
+	var result MessageSyncResponse
 	resp, err := g.restyClient.R().
 		SetBody(req).
 		SetResult(&result).
@@ -92,7 +101,7 @@ func (g *GoWk) MessageSync(req MessageSyncRequest) ([]MessageSyncResponseItem, e
 	if resp.IsError() {
 		return nil, resp.Error().(error)
 	}
-	return result, nil
+	return &result, nil
 }
 
 type GetMaxMessageSeqResponse struct {
