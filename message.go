@@ -42,9 +42,21 @@ func (g *GoWk) SendMessage(req Message) (*SendMessageResponse, error) {
 	return &result, nil
 }
 
+type BatchSendMessageRequst struct {
+	Header      Header   `json:"header"`      // 消息头部信息
+	FromUID     string   `json:"from_uid"`    // 发送者UID
+	Subscribers []string `json:"subscribers"` // 订阅者 如果此字段有值，表示消息只发给指定的订阅者
+	Payload     []byte   `json:"payload"`     // 消息内容
+}
+
+type BatchSendMessageResponse struct {
+	FailUids []string `json:"fail_uids"` // 返回发送失败的用户列表
+	Reason   []string `json:"reason"`    // 发送失败用户列表对应的失败原因列表，与fail_uids一一对应
+}
+
 // 批量发送消息
-func (g *GoWk) BatchSendMessage(req []Message) ([]SendMessageResponse, error) {
-	var result []SendMessageResponse
+func (g *GoWk) BatchSendMessage(req BatchSendMessageRequst) (*BatchSendMessageResponse, error) {
+	var result BatchSendMessageResponse
 	resp, err := g.restyClient.R().
 		SetBody(req).
 		SetResult(&result).
@@ -55,7 +67,7 @@ func (g *GoWk) BatchSendMessage(req []Message) ([]SendMessageResponse, error) {
 	if resp.IsError() {
 		return nil, resp.Error().(error)
 	}
-	return result, nil
+	return &result, nil
 }
 
 type MessageSyncRequest struct {

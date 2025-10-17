@@ -11,23 +11,14 @@ type SyncConversationRequest struct {
 
 // Conversation 会话信息
 type Conversation struct {
-	ChannelID   string                `json:"channel_id"`   // 频道 ID
-	ChannelType ChannelType           `json:"channel_type"` // 频道类型 (1=个人,2=群组)
-	Unread      int                   `json:"unread"`       // 未读消息数量
-	Timestamp   int64                 `json:"timestamp"`    // 最后消息时间戳
-	LastMsgSeq  int64                 `json:"last_msg_seq"` // 最后消息序列号
-	Version     int64                 `json:"version"`      // 会话版本号（纳秒级时间戳）
-	Messages    []ConversationMessage `json:"messages"`     // 最新消息列表
-}
-
-// Message 会话中的消息对象
-type ConversationMessage struct {
-	MessageID   int64  `json:"message_id"`    // 消息 ID
-	MessageSeq  int64  `json:"message_seq"`   // 消息序列号
-	ClientMsgNo string `json:"client_msg_no"` // 客户端消息编号
-	FromUID     string `json:"from_uid"`      // 发送者用户 ID
-	Timestamp   int64  `json:"timestamp"`     // 消息时间戳
-	Payload     string `json:"payload"`       // Base64 编码的消息内容
+	ChannelID       string       `json:"channel_id"`         // 频道 ID
+	ChannelType     ChannelType  `json:"channel_type"`       // 频道类型 (1=个人,2=群组)
+	Unread          int          `json:"unread"`             // 未读消息数量
+	Timestamp       int64        `json:"timestamp"`          // 最后消息时间戳
+	LastMsgSeq      int64        `json:"last_msg_seq"`       // 最后消息序列号
+	LastClientMsgNo string       `json:"last_client_msg_no"` // 最后一条消息的客户端消息编号
+	Version         int64        `json:"version"`            // 会话版本号（纳秒级时间戳）
+	Recents         []RecentItem `json:"recents"`            // 最新消息列表
 }
 
 // 同步用户会话
