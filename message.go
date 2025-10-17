@@ -46,7 +46,7 @@ type BatchSendMessageRequst struct {
 	Header      Header   `json:"header"`      // 消息头部信息
 	FromUID     string   `json:"from_uid"`    // 发送者UID
 	Subscribers []string `json:"subscribers"` // 订阅者 如果此字段有值，表示消息只发给指定的订阅者
-	Payload     []byte   `json:"payload"`     // 消息内容
+	Payload     string   `json:"payload"`     // 消息内容
 }
 
 type BatchSendMessageResponse struct {
