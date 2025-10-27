@@ -1,7 +1,7 @@
 package gowk
 
 import (
-	"net/url"
+	"context"
 	"strconv"
 )
 
@@ -37,26 +37,21 @@ type ConnzConnection struct {
 }
 
 // 获取连接信息
-func (g *GoWk) GetConnz(offset, limit, subs *int) (*GetConnzResponse, error) {
-	base := "/connz"
-	u, err := url.Parse(base)
-	if err != nil {
-		return nil, err
-	}
-	q := u.Query()
+func (g *GoWk) GetConnz(ctx context.Context, offset, limit, subs *int) (*GetConnzResponse, error) {
+	var result GetConnzResponse
+	r := g.restyClient.R().
+		SetContext(ctx).
+		SetResult(&result)
 	if offset != nil {
-		q.Set("offset", strconv.Itoa(*offset))
+		r.SetQueryParam("offset", strconv.Itoa(*offset))
 	}
 	if limit != nil {
-		q.Set("limit", strconv.Itoa(*limit))
+		r.SetQueryParam("limit", strconv.Itoa(*limit))
 	}
 	if subs != nil {
-		q.Set("subs", strconv.Itoa(*subs))
+		r.SetQueryParam("subs", strconv.Itoa(*subs))
 	}
-	var result GetConnzResponse
-	resp, err := g.restyClient.R().
-		SetResult(&result).
-		Get(u.String())
+	resp, err := r.Get("/connz")
 	if err != nil {
 		return nil, err
 	}
@@ -122,26 +117,21 @@ type Config struct {
 }
 
 // 获取系统变量
-func (g *GoWk) GetVarz(sort *string, connLimit *int, nodeId *int) (*ServerStatusResponse, error) {
-	base := "/varz"
-	u, err := url.Parse(base)
-	if err != nil {
-		return nil, err
-	}
-	q := u.Query()
+func (g *GoWk) GetVarz(ctx context.Context, sort *string, connLimit *int, nodeId *int) (*ServerStatusResponse, error) {
+	var result ServerStatusResponse
+	r := g.restyClient.R().
+		SetContext(ctx).
+		SetResult(&result)
 	if sort != nil {
-		q.Set("sort", *sort)
+		r.SetQueryParam("sort", *sort)
 	}
 	if connLimit != nil {
-		q.Set("conn_limit", strconv.Itoa(*connLimit))
+		r.SetQueryParam("conn_limit", strconv.Itoa(*connLimit))
 	}
 	if nodeId != nil {
-		q.Set("node_id", strconv.Itoa(*nodeId))
+		r.SetQueryParam("node_id", strconv.Itoa(*nodeId))
 	}
-	var result ServerStatusResponse
-	resp, err := g.restyClient.R().
-		SetResult(&result).
-		Get(u.String())
+	resp, err := r.Get("/varz")
 	if err != nil {
 		return nil, err
 	}

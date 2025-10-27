@@ -1,5 +1,7 @@
 package gowk
 
+import "context"
+
 type Channel struct {
 	ChannelID     string      `json:"channel_id"`               // 必传，频道 ID，必须唯一
 	ChannelType   ChannelType `json:"channel_type"`             // 必传，频道类型 (1=个人频道, 2=群组频道)
@@ -11,9 +13,10 @@ type Channel struct {
 }
 
 // 创建频道
-func (g *GoWk) CreateChannel(req Channel) (*StatusResponse, error) {
+func (g *GoWk) CreateChannel(ctx context.Context, req Channel) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/channel")
@@ -27,9 +30,10 @@ func (g *GoWk) CreateChannel(req Channel) (*StatusResponse, error) {
 }
 
 // 更新频道信息
-func (g *GoWk) UpdateChannelInfo(req Channel) (*StatusResponse, error) {
+func (g *GoWk) UpdateChannelInfo(ctx context.Context, req Channel) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/channel/info")
@@ -43,9 +47,10 @@ func (g *GoWk) UpdateChannelInfo(req Channel) (*StatusResponse, error) {
 }
 
 // 删除频道
-func (g *GoWk) DeleteChannel(req Channel) (*StatusResponse, error) {
+func (g *GoWk) DeleteChannel(ctx context.Context, req Channel) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/channel/delete")
@@ -67,9 +72,10 @@ type ChannelSubscriber struct {
 }
 
 // 添加频道订阅者
-func (g *GoWk) AddChannelSubscriber(req ChannelSubscriber) (*StatusResponse, error) {
+func (g *GoWk) AddChannelSubscriber(ctx context.Context, req ChannelSubscriber) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/channel/subscriber_add")
@@ -83,9 +89,10 @@ func (g *GoWk) AddChannelSubscriber(req ChannelSubscriber) (*StatusResponse, err
 }
 
 // 移除频道订阅者
-func (g *GoWk) RemoveChannelSubscriber(req ChannelSubscriber) (*StatusResponse, error) {
+func (g *GoWk) RemoveChannelSubscriber(ctx context.Context, req ChannelSubscriber) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/channel/subscriber_remove")
@@ -105,9 +112,10 @@ type ChannelBlackOrWhiteList struct {
 }
 
 // 添加频道黑名单
-func (g *GoWk) AddChannelBlackList(req ChannelBlackOrWhiteList) (*StatusResponse, error) {
+func (g *GoWk) AddChannelBlackList(ctx context.Context, req ChannelBlackOrWhiteList) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/channel/blacklist_add")
@@ -121,9 +129,10 @@ func (g *GoWk) AddChannelBlackList(req ChannelBlackOrWhiteList) (*StatusResponse
 }
 
 // 设置频道黑名单
-func (g *GoWk) SetChannelBlackList(req ChannelBlackOrWhiteList) (*StatusResponse, error) {
+func (g *GoWk) SetChannelBlackList(ctx context.Context, req ChannelBlackOrWhiteList) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/channel/blacklist_set")
@@ -137,9 +146,10 @@ func (g *GoWk) SetChannelBlackList(req ChannelBlackOrWhiteList) (*StatusResponse
 }
 
 // 移除频道黑名单
-func (g *GoWk) RemoveChannelBlackList(req ChannelBlackOrWhiteList) (*StatusResponse, error) {
+func (g *GoWk) RemoveChannelBlackList(ctx context.Context, req ChannelBlackOrWhiteList) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/channel/blacklist_remove")
@@ -153,9 +163,10 @@ func (g *GoWk) RemoveChannelBlackList(req ChannelBlackOrWhiteList) (*StatusRespo
 }
 
 // 添加频道白名单
-func (g *GoWk) AddChannelWhiteList(req ChannelBlackOrWhiteList) (*StatusResponse, error) {
+func (g *GoWk) AddChannelWhiteList(ctx context.Context, req ChannelBlackOrWhiteList) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/channel/whitelist_add")
@@ -169,9 +180,10 @@ func (g *GoWk) AddChannelWhiteList(req ChannelBlackOrWhiteList) (*StatusResponse
 }
 
 // 设置频道白名单
-func (g *GoWk) SetChannelWhiteList(req ChannelBlackOrWhiteList) (*StatusResponse, error) {
+func (g *GoWk) SetChannelWhiteList(ctx context.Context, req ChannelBlackOrWhiteList) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/channel/whitelist_set")
@@ -185,9 +197,10 @@ func (g *GoWk) SetChannelWhiteList(req ChannelBlackOrWhiteList) (*StatusResponse
 }
 
 // 移除频道白名单
-func (g *GoWk) RemoveChannelWhiteList(req ChannelBlackOrWhiteList) (*StatusResponse, error) {
+func (g *GoWk) RemoveChannelWhiteList(ctx context.Context, req ChannelBlackOrWhiteList) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/channel/whitelist_remove")
@@ -206,9 +219,10 @@ type GetChannelWhiteListRequest struct {
 }
 
 // 获取频道白名单
-func (g *GoWk) GetChannelWhiteList(req GetChannelWhiteListRequest) ([]string, error) {
+func (g *GoWk) GetChannelWhiteList(ctx context.Context, req GetChannelWhiteListRequest) ([]string, error) {
 	var result []string
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Get("/channel/whitelist")

@@ -1,6 +1,9 @@
 package gowk
 
-import "strconv"
+import (
+	"context"
+	"strconv"
+)
 
 type UserIMAddr struct {
 	TcpAddr string `json:"tcp_addr"`
@@ -9,11 +12,13 @@ type UserIMAddr struct {
 }
 
 // 获取用户IM地址
-func (g *GoWk) GetUserIMAddr(intranet int) (*UserIMAddr, error) {
+func (g *GoWk) GetUserIMAddr(ctx context.Context, intranet int) (*UserIMAddr, error) {
 	var result UserIMAddr
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetResult(&result).
-		Get("/route?intranet=" + strconv.Itoa(intranet))
+		SetQueryParam("intranet", strconv.Itoa(intranet)).
+		Get("/route")
 
 	if err != nil {
 		return nil, err
@@ -30,12 +35,14 @@ type BatchUserIMAddr struct {
 }
 
 // 批量获取用户IM地址
-func (g *GoWk) BatchGetUserIMAddr(intranet int, userId ...string) ([]BatchUserIMAddr, error) {
+func (g *GoWk) BatchGetUserIMAddr(ctx context.Context, intranet int, userId ...string) ([]BatchUserIMAddr, error) {
 	var result []BatchUserIMAddr
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(userId).
 		SetResult(&result).
-		Post("/route/batch?intranet=" + strconv.Itoa(intranet))
+		SetQueryParam("intranet", strconv.Itoa(intranet)).
+		Post("/route/batch")
 	if err != nil {
 		return nil, err
 	}

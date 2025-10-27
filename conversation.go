@@ -1,5 +1,7 @@
 package gowk
 
+import "context"
+
 type SyncConversationRequest struct {
 	UID                 string        `json:"uid"`                             // 必传：用户 ID
 	Version             *int64        `json:"version,omitempty"`               // 可选：版本时间戳（增量同步）
@@ -22,9 +24,10 @@ type Conversation struct {
 }
 
 // 同步用户会话
-func (g *GoWk) SyncConversation(req SyncConversationRequest) ([]Conversation, error) {
+func (g *GoWk) SyncConversation(ctx context.Context, req SyncConversationRequest) ([]Conversation, error) {
 	var result []Conversation
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/conversation/sync")
@@ -49,9 +52,10 @@ type ClearConversationUnreadRequest struct {
 }
 
 // 清除未读消息
-func (g *GoWk) ClearConversationUnread(req ClearConversationUnreadRequest) (*StatusResponse, error) {
+func (g *GoWk) ClearConversationUnread(ctx context.Context, req ClearConversationUnreadRequest) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/conversations/clearUnread")
@@ -70,9 +74,10 @@ type SetConversationUnreadRequest struct {
 }
 
 // 设置会话未读数
-func (g *GoWk) SetConversationUnread(req SetConversationUnreadRequest) (*StatusResponse, error) {
+func (g *GoWk) SetConversationUnread(ctx context.Context, req SetConversationUnreadRequest) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/conversations/setUnread")
@@ -86,9 +91,10 @@ func (g *GoWk) SetConversationUnread(req SetConversationUnreadRequest) (*StatusR
 }
 
 // 删除会话
-func (g *GoWk) DeleteConversation(req ConversationInfo) (*StatusResponse, error) {
+func (g *GoWk) DeleteConversation(ctx context.Context, req ConversationInfo) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/conversations/delete")

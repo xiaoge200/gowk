@@ -1,5 +1,7 @@
 package gowk
 
+import "context"
+
 // SendEventRequest 发送事件请求
 type SendEventRequest struct {
 	ClientMsgNo string      `json:"client_msg_no"` // 必传，客户端消息编号，必须唯一
@@ -18,12 +20,16 @@ type Event struct {
 }
 
 // 发送事件
-func (g *GoWk) SendEvent(force *string, req ConnInfo) (*StatusResponse, error) {
+func (g *GoWk) SendEvent(ctx context.Context, force *string, req ConnInfo) (*StatusResponse, error) {
 	var result StatusResponse
-	resp, err := g.restyClient.R().
+	r := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
-		SetResult(&result).
-		Post("/event")
+		SetResult(&result)
+	if force != nil {
+		r.SetQueryParam("force", *force)
+	}
+	resp, err := r.Post("/event")
 	if err != nil {
 		return nil, err
 	}

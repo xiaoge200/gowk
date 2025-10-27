@@ -1,9 +1,12 @@
 package gowk
 
+import "context"
+
 // 健康检查
-func (g *GoWk) HealthCheck() (*StatusResponse, error) {
+func (g *GoWk) HealthCheck(ctx context.Context) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetResult(&result).
 		Get("/health")
 	if err != nil {
@@ -23,9 +26,10 @@ type MigrationStatusResponse struct {
 }
 
 // 获取迁移结果
-func (g *GoWk) GetMigrateReult() (*MigrationStatusResponse, error) {
+func (g *GoWk) GetMigrateReult(ctx context.Context) (*MigrationStatusResponse, error) {
 	var result MigrationStatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetResult(&result).
 		Get("/migrate/result")
 	if err != nil {

@@ -1,6 +1,9 @@
 package gowk
 
-import "fmt"
+import (
+	"context"
+	"strconv"
+)
 
 type Header struct {
 	NoPersist *int `json:"no_persist,omitempty"` // 是否持久化
@@ -27,9 +30,10 @@ type SendMessageResponse struct {
 }
 
 // 发送消息
-func (g *GoWk) SendMessage(req Message) (*SendMessageResponse, error) {
+func (g *GoWk) SendMessage(ctx context.Context, req Message) (*SendMessageResponse, error) {
 	var result SendMessageResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/message/send")
@@ -55,9 +59,10 @@ type BatchSendMessageResponse struct {
 }
 
 // 批量发送消息
-func (g *GoWk) BatchSendMessage(req BatchSendMessageRequst) (*BatchSendMessageResponse, error) {
+func (g *GoWk) BatchSendMessage(ctx context.Context, req BatchSendMessageRequst) (*BatchSendMessageResponse, error) {
 	var result BatchSendMessageResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/message/sendbatch")
@@ -101,9 +106,10 @@ type MessageSyncResponse struct {
 }
 
 // 同步频道历史消息
-func (g *GoWk) MessageSync(req MessageSyncRequest) (*MessageSyncResponse, error) {
+func (g *GoWk) MessageSync(ctx context.Context, req MessageSyncRequest) (*MessageSyncResponse, error) {
 	var result MessageSyncResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/channel/messagesync")
@@ -128,11 +134,14 @@ type GetMaxMessageSeqResponse struct {
 }
 
 // 获取频道最大消息序号
-func (g *GoWk) GetMaxMessageSeq(channelId string, channelType ChannelType) (*GetMaxMessageSeqResponse, error) {
+func (g *GoWk) GetMaxMessageSeq(ctx context.Context, channelId string, channelType ChannelType) (*GetMaxMessageSeqResponse, error) {
 	var result GetMaxMessageSeqResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetResult(&result).
-		Get(fmt.Sprintf("/channel/max_message_seq?channel_id=%s&channel_type=%d", channelId, channelType))
+		SetQueryParam("channel_id", channelId).
+		SetQueryParam("channel_type", strconv.Itoa(int(channelType))).
+		Get("/channel/max_message_seq")
 	if err != nil {
 		return nil, err
 	}
@@ -158,9 +167,10 @@ type GetMessageRequest struct {
 }
 
 // 单条消息搜索
-func (g *GoWk) GetMessageByID(req GetMessageRequest) (*GetMessageResponse, error) {
+func (g *GoWk) GetMessageByID(ctx context.Context, req GetMessageRequest) (*GetMessageResponse, error) {
 	var result GetMessageResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/message")
@@ -178,9 +188,10 @@ type BatchGetMessageRequest struct {
 }
 
 // 批量消息搜索
-func (g *GoWk) BatchGetMessage(req BatchGetMessageRequest) ([]GetMessageResponse, error) {
+func (g *GoWk) BatchGetMessage(ctx context.Context, req BatchGetMessageRequest) ([]GetMessageResponse, error) {
 	var result []GetMessageResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/messages")
@@ -229,9 +240,10 @@ type SearchedMessage struct {
 }
 
 // 用户消息搜索
-func (g *GoWk) SearchUserMessage(req SearchUserMessagesRequest) (*SearchUserMessagesResponse, error) {
+func (g *GoWk) SearchUserMessage(ctx context.Context, req SearchUserMessagesRequest) (*SearchUserMessagesResponse, error) {
 	var result SearchUserMessagesResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/plugins/wk.plugin.search/usersearch")

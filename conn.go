@@ -1,5 +1,7 @@
 package gowk
 
+import "context"
+
 type ConnInfo struct {
 	UID    string `json:"uid"`               // 必传，用户 ID
 	ConnID int64  `json:"conn_id"`           // 必传，连接 ID
@@ -7,9 +9,10 @@ type ConnInfo struct {
 }
 
 // 移除连接
-func (g *GoWk) RemoveConn(req ConnInfo) (*StatusResponse, error) {
+func (g *GoWk) RemoveConn(ctx context.Context, req ConnInfo) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/conn/remove")
@@ -23,9 +26,10 @@ func (g *GoWk) RemoveConn(req ConnInfo) (*StatusResponse, error) {
 }
 
 // 踢出连接
-func (g *GoWk) KickConn(req ConnInfo) (*StatusResponse, error) {
+func (g *GoWk) KickConn(ctx context.Context, req ConnInfo) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/conn/kick")

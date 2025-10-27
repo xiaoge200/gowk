@@ -1,5 +1,7 @@
 package gowk
 
+import "context"
+
 type SetUserTokenRequest struct {
 	UID         string       `json:"uid"`                    // 必传，用户唯一 ID
 	Token       string       `json:"token"`                  // 必传，校验的 token
@@ -8,9 +10,10 @@ type SetUserTokenRequest struct {
 }
 
 // 设置用户Token
-func (g *GoWk) SetUserToken(req SetUserTokenRequest) (*StatusResponse, error) {
+func (g *GoWk) SetUserToken(ctx context.Context, req SetUserTokenRequest) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/user/token")
@@ -26,8 +29,8 @@ func (g *GoWk) SetUserToken(req SetUserTokenRequest) (*StatusResponse, error) {
 type UpdateUserTokenRequest SetUserTokenRequest
 
 // 更新用户Token
-func (g *GoWk) UpdateUserToken(req UpdateUserTokenRequest) (*StatusResponse, error) {
-	return g.SetUserToken(SetUserTokenRequest(req))
+func (g *GoWk) UpdateUserToken(ctx context.Context, req UpdateUserTokenRequest) (*StatusResponse, error) {
+	return g.SetUserToken(ctx, SetUserTokenRequest(req))
 }
 
 type QuitUserDeviceRequest struct {
@@ -36,9 +39,10 @@ type QuitUserDeviceRequest struct {
 }
 
 // 强制设备退出
-func (g *GoWk) QuitUserDevice(req QuitUserDeviceRequest) (*StatusResponse, error) {
+func (g *GoWk) QuitUserDevice(ctx context.Context, req QuitUserDeviceRequest) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/user/device_quit")
@@ -58,9 +62,10 @@ type OnlineStatus struct {
 }
 
 // 获取设备在线状态
-func (g *GoWk) GetOnlineStatus(uid ...string) ([]OnlineStatus, error) {
+func (g *GoWk) GetOnlineStatus(ctx context.Context, uid ...string) ([]OnlineStatus, error) {
 	var result []OnlineStatus
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(uid).
 		SetResult(&result).
 		Post("/user/onlinestatus")
@@ -74,9 +79,10 @@ func (g *GoWk) GetOnlineStatus(uid ...string) ([]OnlineStatus, error) {
 }
 
 // 获取系统用户ID
-func (g *GoWk) GetSystemUserID() ([]string, error) {
+func (g *GoWk) GetSystemUserID(ctx context.Context) ([]string, error) {
 	var result []string
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetResult(&result).
 		Get("/user/systemuids")
 	if err != nil {
@@ -93,9 +99,10 @@ type AddOrRemoveSystemUsersRequest struct {
 }
 
 // 添加系统用户ID
-func (g *GoWk) AddSystemUser(req AddOrRemoveSystemUsersRequest) (*StatusResponse, error) {
+func (g *GoWk) AddSystemUser(ctx context.Context, req AddOrRemoveSystemUsersRequest) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/user/systemuids_add")
@@ -109,9 +116,10 @@ func (g *GoWk) AddSystemUser(req AddOrRemoveSystemUsersRequest) (*StatusResponse
 }
 
 // 移除系统用户ID
-func (g *GoWk) RemoveSystemUser(req AddOrRemoveSystemUsersRequest) (*StatusResponse, error) {
+func (g *GoWk) RemoveSystemUser(ctx context.Context, req AddOrRemoveSystemUsersRequest) (*StatusResponse, error) {
 	var result StatusResponse
 	resp, err := g.restyClient.R().
+		SetContext(ctx).
 		SetBody(req).
 		SetResult(&result).
 		Post("/user/systemuids_remove")
