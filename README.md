@@ -13,9 +13,8 @@ package main
 import (
 	"context"
 	"fmt"
-	"strings"
+	"encoding/base64"
 
-	"github.com/google/uuid"
     "github.com/xiaoge200/gowk"
 )
 
