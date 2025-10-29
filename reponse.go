@@ -1,19 +1,21 @@
 package gowk
 
-import "errors"
+import (
+	"fmt"
+	"net/http"
+)
 
 type StatusResponse struct {
-	Status  string `json:"status"` // 操作状态，成功时返回 "ok"
-	Message string `json:"message"`
+	StatusCode int    `json:"-"`
+	Status     int    `json:"status"` // 操作状态，成功时返回 "ok"
+	Msg        string `json:"msg"`
+	Data       any    `json:"data"`
 }
 
 func (r *StatusResponse) IsOk() bool {
-	return r.Status == "ok"
+	return r.Status == http.StatusOK
 }
 
-func (r *StatusResponse) Error() error {
-	if r.IsOk() {
-		return nil
-	}
-	return errors.New(r.Message)
+func (r *StatusResponse) Error() string {
+	return fmt.Sprintf("[%d] %s", r.Status, r.Msg)
 }

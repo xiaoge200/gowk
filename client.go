@@ -35,11 +35,11 @@ func (g *GoWk) RestyClient() *resty.Client {
 
 func handleAPIError(c *resty.Client, resp *resty.Response) error {
 	if resp.IsError() {
-		if err, ok := resp.Error().(*APIError); ok {
+		if err, ok := resp.Error().(*StatusResponse); ok {
 			err.StatusCode = resp.StatusCode()
 			return err
 		}
-		err := &APIError{}
+		err := &StatusResponse{}
 		json.Unmarshal(resp.Body(), err)
 		err.StatusCode = resp.StatusCode()
 		return err
