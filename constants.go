@@ -3,8 +3,8 @@ package gowk
 type Bool int
 
 const (
-	Intranet_Intent   = 0 // 内网地址
-	Intranet_External = 1 // 外网地址
+	Intranet_External = 0 // 外网地址
+	Intranet_Intent   = 1 // 内网地址
 )
 
 const (
